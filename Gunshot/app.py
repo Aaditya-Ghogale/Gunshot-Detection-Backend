@@ -3,6 +3,7 @@ import tensorflow as tf
 import librosa
 import numpy as np
 import os
+import logging
 
 app = Flask(__name__)
 
@@ -45,6 +46,10 @@ def preprocess_audio(file_path, target_sample_rate=22050, n_mfcc=13, fixed_time_
     
     return mfccs
 
+@app.route('/')
+def home():
+    return "Gunshot Detection Backend is running!"
+
 @app.route('/predict', methods=['POST'])
 def predict():
     # Check if an audio file is included
@@ -73,4 +78,5 @@ def predict():
             os.remove(file_path)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Use PORT if set, otherwise default to 5000
+    app.run(host='0.0.0.0', port=port)
